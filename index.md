@@ -1,37 +1,94 @@
-## Welcome to GitHub Pages
+<html>
+  <head>
+    <style type="text/css">
+      html, body { height: 100%; margin: 0; padding: 0; }
+      #map { height: 100%; }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script type="text/javascript">
 
-You can use the [editor on GitHub](https://github.com/thomas871208/goolemap/edit/master/index.md) to maintain and preview the content for your website in Markdown files.
+      
+function initMap() {
+  var markers = [];
+  var infoWindows = [];
+  var map = new google.maps.Map(document.getElementById('map'), {
+    center: {lat: 25.04, lng: 121.512},
+    zoom: 14
+  });
+  var geocoder = new google.maps.Geocoder();
+  console.log(geocoder);
+  
+  //info windows
+  var info_config = [
+    '<h2>總統府</h2>'+
+    '<span>這是總統府喔！</span><br/>'+
+    '<img class="infoImg" src="http://www.president.gov.tw/Portals/0/images/PresidentOffice/BeautyBuliding/President/m_000064_342436.jpg"><br/>'+
+    '<i>(圖片取自總統府網站)</i>',
+    '<h2>民主紀念館</h2>'+
+    '<span>不是中正紀念堂喔</span><br/>'+
+    '<img class="infoImg" src="http://www.cksmh.gov.tw/upload/article/4248b77496baac99a290f6f202bfe786.jpg"><br/>'+
+    '<i>(圖片取自民主紀念館網站)</i>'
+  ];
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+  //建立地圖 marker 的集合
+  var marker_config = [{
+    position: {lat: 25.04, lng: 121.512},
+    map: map,
+    title:'總統府'
+  },{
+    position: {lat: 25.035, lng: 121.519},
+    map: map,
+    title:'民主紀念館'
+  }];
+  
+  //設定 Info window 內容
+  
+  info_config.forEach(function(e,i){
+    infoWindows[i] = new google.maps.InfoWindow({
+      content: e
+    });
+  });
+  
+  
+  //標出 marker
+  marker_config.forEach(function(e,i){
+    markers[i] = new google.maps.Marker(e);
+    markers[i].setMap(map);
+    markers[i].addListener('click', function() {
+      infoWindows[i].open(map, markers[i]);
+    });
+  });
+  
+  
+  
+  function _geocoder(address){
+    geocoder.geocode({
+      address: address
+    }, function(results, status) {
+      if (status == google.maps.GeocoderStatus.OK) {
+        LatLng = results[0].geometry.location;
+        return results;
+      }
+    });
+  }
+  
+  console.log(_geocoder('高雄市'));
 
-### Markdown
+}
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
 
-```markdown
-Syntax highlighted code block
+    </script>
+    <script async defer
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCeVquo2FZhH8hGWE8CkgDYu64dl7gbClA&callback=initMap">
+    </script>
 
-# Header 1
-## Header 2
-### Header 3
 
-- Bulleted
-- List
+     
+  </body>
 
-1. Numbered
-2. List
 
-**Bold** and _Italic_ and `Code` text
 
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/thomas871208/goolemap/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+ 
+</html>
